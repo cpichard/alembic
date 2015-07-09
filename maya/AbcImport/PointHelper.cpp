@@ -85,10 +85,11 @@ MStatus create(double iFrame, const Alembic::AbcGeom::IPoints & iNode,
     }
 
     // convert the data to Maya format
-    MFnParticleSystem fnParticle;
-    iObject = fnParticle.create(iParent, &status);
-    fnParticle.setObject(iObject);
-    fnParticle.setName(iNode.getName().c_str());
+    MFnParticleSystem fnParticleFactory;
+    iObject = fnParticleFactory.create(iParent, &status);
+
+    MFnParticleSystem fnParticle(iObject);
+
 
     MPointArray pArray;
     Alembic::Abc::P3fArraySamplePtr v3ptr = samp.getPositions();
@@ -104,5 +105,6 @@ MStatus create(double iFrame, const Alembic::AbcGeom::IPoints & iNode,
     status = fnParticle.emit(pArray);
     status = fnParticle.saveInitialState();
 
+    fnParticle.setName(iNode.getName().c_str());
     return status;
 }
